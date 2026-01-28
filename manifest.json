@@ -1,0 +1,29 @@
+{
+    "manifest_version": 3,
+    "name": "DuckIt",
+    "version": "1.0",
+    "description": "Autonomous audio agent that ducks background music when priority audio plays.",
+    "permissions": [
+        "tabs",
+        "storage",
+        "scripting",
+        "notifications"
+    ],
+    "host_permissions": [
+        "<all_urls>"
+    ],
+    "background": {
+        "service_worker": "background/background.js",
+        "type": "module"
+    },
+    "action": {
+        "default_popup": "popup/popup.html",
+        "default_title": "DuckIt Audio Agent",
+        "default_icon": {
+            "128": "icons/icon128.png"
+        }
+    },
+    "icons": {
+        "128": "icons/icon128.png"
+    }
+}

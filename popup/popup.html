@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DuckIt</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+
+<body>
+    <div class="container">
+
+        <!-- Header / Main Toggle -->
+        <div class="main-toggle-section">
+            <div class="logo">🦆 DuckIt</div>
+            <label class="big-switch">
+                <input type="checkbox" id="toggleAgent" checked>
+                <span class="big-slider"></span>
+            </label>
+        </div>
+
+        <!-- Status -->
+        <div class="status-card" id="statusCard">
+            <div class="status-icon">🎵</div>
+            <div class="status-info">
+                <div class="status-label" id="statusTitle">No Music Tab</div>
+                <div class="status-sub" id="statusSubtitle">Auto-detecting...</div>
+            </div>
+            <div class="status-indicator hidden" id="duckingIndicator">
+                <span class="active-dot"></span> Active
+            </div>
+        </div>
+
+        <!-- Mode Selection -->
+        <div class="section-title">Ducking Mode</div>
+        <div class="mode-selector">
+            <label class="mode-option">
+                <input type="radio" name="mode" value="mute">
+                <span class="mode-box">Mute</span>
+            </label>
+            <label class="mode-option">
+                <input type="radio" name="mode" value="pause">
+                <span class="mode-box">Pause</span>
+            </label>
+            <label class="mode-option">
+                <input type="radio" name="mode" value="volume">
+                <span class="mode-box">Fade</span>
+            </label>
+        </div>
+
+        <!-- Volume Slider (Conditional) -->
+        <div class="volume-control hidden" id="volumeControl">
+            <div class="slider-header">
+                <span>Ducking Level</span>
+                <span id="volValue">30%</span>
+            </div>
+            <input type="range" id="volSlider" min="0" max="100" value="30">
+        </div>
+
+        <!-- Action -->
+        <button id="setMusicBtn" class="secondary-btn">
+            Set Current Tab as Music
+        </button>
+
+    </div>
+    <div id="toast" class="toast hidden"></div>
+    <script src="popup.js" type="module"></script>
+</body>
+
+</html>

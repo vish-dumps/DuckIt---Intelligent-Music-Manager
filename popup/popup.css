@@ -1,0 +1,261 @@
+:root {
+    --bg-color: #f2f2f7;
+    --card-bg: #ffffff;
+    --text-primary: #000000;
+    --text-secondary: #8e8e93;
+    --accent: #007aff;
+    --accent-dim: #e5f1ff;
+    --danger: #ff3b30;
+    --success: #34c759;
+    --border-radius: 16px;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-color: #1c1c1e;
+        --card-bg: #2c2c2e;
+        --text-primary: #ffffff;
+        --text-secondary: #aeaeb2;
+    }
+}
+
+body {
+    width: 320px;
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    user-select: none;
+}
+
+.container {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Big Toggle Header */
+.main-toggle-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.big-switch {
+    display: inline-block;
+    width: 50px;
+    height: 30px;
+    position: relative;
+}
+
+.big-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.big-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #e9e9ea;
+    transition: .3s;
+    border-radius: 30px;
+}
+
+.big-switch input:checked+.big-slider {
+    background-color: var(--success);
+}
+
+.big-slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    transition: .3s;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.big-switch input:checked+.big-slider:before {
+    transform: translateX(20px);
+}
+
+/* Status Card */
+.status-card {
+    background-color: var(--card-bg);
+    padding: 16px;
+    border-radius: var(--border-radius);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.status-icon {
+    font-size: 24px;
+}
+
+.status-info {
+    flex: 1;
+    overflow: hidden;
+}
+
+.status-label {
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.status-sub {
+    font-size: 13px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.active-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background-color: var(--accent);
+    border-radius: 50%;
+    margin-right: 4px;
+}
+
+.status-indicator {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-dim);
+    padding: 4px 8px;
+    border-radius: 12px;
+}
+
+/* Modes */
+.section-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: -10px;
+    margin-left: 4px;
+}
+
+.mode-selector {
+    display: flex;
+    background-color: #e5e5ea;
+    /* Light gray track */
+    border-radius: 12px;
+    padding: 4px;
+}
+
+@media (prefers-color-scheme: dark) {
+    .mode-selector {
+        background-color: #3a3a3c;
+    }
+}
+
+.mode-option {
+    flex: 1;
+    text-align: center;
+    cursor: pointer;
+}
+
+.mode-option input {
+    display: none;
+}
+
+.mode-box {
+    display: block;
+    padding: 8px 0;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: 8px;
+    color: var(--text-secondary);
+    transition: all 0.2s;
+}
+
+.mode-option input:checked+.mode-box {
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+    /* Use text-primary instead of accent for cleaner iOS look */
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Slider */
+.volume-control {
+    background-color: var(--card-bg);
+    padding: 16px;
+    border-radius: var(--border-radius);
+}
+
+.slider-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+input[type=range] {
+    width: 100%;
+    accent-color: var(--accent);
+}
+
+/* Button */
+.secondary-btn {
+    background-color: transparent;
+    color: var(--accent);
+    border: 1px solid transparent;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 12px;
+    transition: background 0.2s;
+}
+
+.secondary-btn:hover {
+    background-color: var(--accent-dim);
+}
+
+.hidden {
+    display: none;
+}
+
+.toast {
+    position: fixed;
+    left: 50%;
+    bottom: 12px;
+    transform: translateX(-50%);
+    background: var(--card-bg);
+    color: var(--text-primary);
+    padding: 10px 12px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    font-size: 13px;
+    z-index: 10;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    max-width: 280px;
+    text-align: center;
+}
+
+@media (prefers-color-scheme: dark) {
+    .toast {
+        border-color: #3a3a3c;
+    }
+}
