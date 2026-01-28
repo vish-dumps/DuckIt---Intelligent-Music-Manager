@@ -78,7 +78,6 @@ export class AudioAgent {
                 runAt: 'document_start'
             }]);
         } catch (e) {
-            // Already registered or not supported (older Chrome) — safe to ignore.
             console.debug('DuckIt sensor registration', e?.message || e);
         }
     }
@@ -93,6 +92,7 @@ export class AudioAgent {
                     target: { tabId: tab.id },
                     files: ['content/audio_sensor.js']
                 });
+                this.scriptManager.injectedTabs.add(tab.id);
             } catch (e) {
                 console.debug('DuckIt sensor inject skip', tab.id, e?.message || e);
             }
@@ -140,7 +140,7 @@ export class AudioAgent {
                 url: tab.url
             });
         } catch (_) {
-            // Popup may be closed; that's fine.
+            // Popup may be closed
         }
     }
 
@@ -149,7 +149,7 @@ export class AudioAgent {
 
         const musicTabId = this.storage.getMusicTabIdSync();
         if (tabId === musicTabId) {
-            console.log("Music tab closed.");
+            console.log('Music tab closed.');
             await this.storage.setMusicTabId(null);
             this.duckedByAgent = false;
             this.lastDuckMode = null;
@@ -170,7 +170,7 @@ export class AudioAgent {
     checkAutoDetect(tabId, tab) {
         if (!tab || !tab.url) return;
         const musicTabId = this.storage.getMusicTabIdSync();
-        if (musicTabId) return; // Already have one
+        if (musicTabId) return;
 
         if (this.isKnownMusicSite(tab.url)) {
             console.log(`Auto-detected Music Site: ${tab.url}`);
@@ -181,7 +181,6 @@ export class AudioAgent {
     async detectExistingMusicTabs() {
         const current = this.storage.getMusicTabIdSync();
         if (current) return;
-
         try {
             const tabs = await chrome.tabs.query({});
             for (const tab of tabs) {
@@ -241,7 +240,7 @@ export class AudioAgent {
     async restoreMusic(musicTabId, settings) {
         if (!this.duckedByAgent) return;
 
-        console.log("Restoring Music Tab...");
+        console.log('Restoring Music Tab...');
 
         if (settings.mode === 'mute') {
             await chrome.tabs.update(musicTabId, { muted: false });

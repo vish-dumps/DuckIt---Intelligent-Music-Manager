@@ -4,17 +4,16 @@ export class StorageManager {
             MUSIC_TAB_ID: 'duckit_music_tab_id',
             SETTINGS: 'duckit_settings'
         };
-        // In-memory cache for speed
+
         this.cache = {
             musicTabId: null,
             settings: { mode: 'mute', enabled: true, duckingIntensity: 30 }
         };
+
         this.ready = this.init();
 
-        // Keep cache in sync even when other extension contexts write.
         chrome.storage.onChanged.addListener((changes, area) => {
             if (area !== 'local') return;
-
             if (changes[this.STORAGE_KEYS.MUSIC_TAB_ID]) {
                 this.cache.musicTabId = changes[this.STORAGE_KEYS.MUSIC_TAB_ID].newValue || null;
             }
@@ -36,7 +35,7 @@ export class StorageManager {
             enabled: true,
             duckingIntensity: 30
         };
-        console.log("StorageManager initialized with cache:", this.cache);
+        console.log('StorageManager initialized with cache:', this.cache);
     }
 
     async whenReady() {

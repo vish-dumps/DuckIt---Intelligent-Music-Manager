@@ -11,7 +11,7 @@ export class ScriptManager {
             this.injectedTabs.add(tabId);
             return;
         } catch (_) {
-            // Falls through to injection below.
+            // will fall through to inject
         }
 
         try {

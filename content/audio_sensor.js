@@ -15,7 +15,7 @@
         try {
             chrome.runtime.sendMessage(payload, () => void chrome.runtime.lastError);
         } catch (_) {
-            // Ignore unreachable target (e.g., service worker asleep).
+            // ignore if service worker asleep
         }
     };
 
@@ -37,7 +37,7 @@
         });
     };
 
-    // --- Media Element Tracking ------------------------------------------------
+    // ---- Media elements ------------------------------------------------------
     const trackedMedia = new WeakSet();
     const mediaEvents = [
         'play', 'playing', 'pause', 'ended', 'suspend', 'stalled',
@@ -87,7 +87,7 @@
     document.addEventListener('DOMContentLoaded', () => scanForMedia());
     scanForMedia();
 
-    // --- Web Audio Tracking ----------------------------------------------------
+    // ---- Web Audio -----------------------------------------------------------
     const setupContext = (ctx) => {
         if (contextInfo.has(ctx)) return;
 
@@ -146,7 +146,7 @@
                 return originalConnect.call(this, destination.context.__duckitMasterGain, ...rest);
             }
         } catch (_) {
-            // Fall through.
+            // ignore
         }
         return originalConnect.call(this, destination, ...rest);
     };
@@ -183,7 +183,7 @@
         };
     }
 
-    // --- Ducking + Pause/Resume -----------------------------------------------
+    // ---- Duck / pause control -------------------------------------------------
     const applyDuckToElement = (el) => {
         if (!(el instanceof HTMLMediaElement)) return;
         if (!ducked) return;
@@ -265,7 +265,7 @@
         restoreDuckFromContexts();
     };
 
-    // --- Message Router -------------------------------------------------------
+    // ---- Message router ------------------------------------------------------
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         if (!request || !request.type) return;
         switch (request.type) {
@@ -296,6 +296,6 @@
         return true;
     });
 
-    // Kick off initial state.
+    // kick off initial state
     recomputeAudible('init');
 })();

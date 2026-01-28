@@ -2,7 +2,7 @@
 import { AudioAgent } from './audio_agent.js';
 import { StorageManager } from './storage.js';
 
-// Top-level await is disallowed in MV3 service workers. Bootstrap explicitly.
+// Wrap startup to avoid top-level await restrictions in MV3 service workers.
 (async () => {
     const storageManager = new StorageManager();
     await storageManager.whenReady();
@@ -10,5 +10,5 @@ import { StorageManager } from './storage.js';
     const audioAgent = new AudioAgent(storageManager);
     await audioAgent.ready;
 
-    console.log("DuckIt background service started.");
+    console.log('DuckIt background service started.');
 })();
