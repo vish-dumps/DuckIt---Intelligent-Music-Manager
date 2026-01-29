@@ -8,6 +8,7 @@ const setMusicBtn = document.getElementById('setMusicBtn');
 const statusTitle = document.getElementById('statusTitle');
 const statusSubtitle = document.getElementById('statusSubtitle');
 const duckingIndicator = document.getElementById('duckingIndicator');
+const statusFavicon = document.getElementById('statusFavicon');
 const modeRadios = document.querySelectorAll('input[name="mode"]');
 const volumeControl = document.getElementById('volumeControl');
 const volSlider = document.getElementById('volSlider');
@@ -99,6 +100,7 @@ async function updateStatus(musicTabIdOverride) {
         statusTitle.textContent = 'Agent Disabled';
         statusSubtitle.textContent = 'Turn on to start ducking';
         duckingIndicator.classList.add('hidden');
+        setFavicon(null);
         return;
     }
 
@@ -108,6 +110,7 @@ async function updateStatus(musicTabIdOverride) {
             statusTitle.textContent = 'Music Active';
             statusSubtitle.textContent = tab.title;
             setMusicBtn.textContent = 'Update Music Tab';
+            setFavicon(tab.favIconUrl);
 
             if (settings.mode === 'mute' && tab.mutedInfo && tab.mutedInfo.muted) {
                 duckingIndicator.classList.remove('hidden');
@@ -118,12 +121,14 @@ async function updateStatus(musicTabIdOverride) {
             statusTitle.textContent = 'Music Tab Lost';
             statusSubtitle.textContent = 'Tab was closed';
             duckingIndicator.classList.add('hidden');
+            setFavicon(null);
         }
     } else {
         statusTitle.textContent = 'No Music Tab';
         statusSubtitle.textContent = 'Open music to auto-detect';
         setMusicBtn.textContent = 'Set Current Tab';
         duckingIndicator.classList.add('hidden');
+        setFavicon(null);
     }
 }
 
@@ -143,3 +148,14 @@ chrome.runtime.onMessage.addListener((message) => {
         updateStatus(message.tabId);
     }
 });
+
+function setFavicon(url) {
+    if (!statusFavicon) return;
+    if (url) {
+        statusFavicon.src = url;
+        statusFavicon.classList.remove('hidden');
+    } else {
+        statusFavicon.src = '../icons/icon128.png';
+        statusFavicon.classList.remove('hidden');
+    }
+}

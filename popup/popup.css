@@ -20,7 +20,7 @@
 }
 
 body {
-    width: 320px;
+    width: 340px;
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     background-color: var(--bg-color);
@@ -28,8 +28,16 @@ body {
     user-select: none;
 }
 
+.shell {
+    margin: 10px;
+    background: var(--card-bg);
+    border-radius: 20px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.16);
+    overflow: hidden;
+}
+
 .container {
-    padding: 20px;
+    padding: 18px 20px 20px 20px;
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -43,9 +51,18 @@ body {
 }
 
 .logo {
-    font-size: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 18px;
     font-weight: 800;
-    letter-spacing: -0.5px;
+    letter-spacing: -0.4px;
+}
+.logo-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    flex-shrink: 0;
 }
 
 .big-switch {
@@ -105,8 +122,13 @@ body {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-.status-icon {
-    font-size: 24px;
+.status-favicon {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    object-fit: cover;
+    background: #e5e5ea;
+    flex-shrink: 0;
 }
 
 .status-info {

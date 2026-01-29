@@ -9,11 +9,15 @@
 </head>
 
 <body>
-    <div class="container">
+    <div class="shell">
+        <div class="container">
 
         <!-- Header / Main Toggle -->
         <div class="main-toggle-section">
-            <div class="logo">DuckIt</div>
+            <div class="logo">
+                <img src="../icons/icon128.png" alt="DuckIt" class="logo-icon">
+                <span>DuckIt</span>
+            </div>
             <label class="big-switch">
                 <input type="checkbox" id="toggleAgent" checked>
                 <span class="big-slider"></span>
@@ -22,7 +26,7 @@
 
         <!-- Status -->
         <div class="status-card" id="statusCard">
-            <div class="status-icon">&#9835;</div>
+            <img id="statusFavicon" class="status-favicon" alt="Favicon">
             <div class="status-info">
                 <div class="status-label" id="statusTitle">No Music Tab</div>
                 <div class="status-sub" id="statusSubtitle">Auto-detecting...</div>
@@ -63,6 +67,7 @@
             Set Current Tab as Music
         </button>
 
+        </div>
     </div>
     <div id="toast" class="toast hidden"></div>
     <script src="popup.js" type="module"></script>
