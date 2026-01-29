@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - DuckIt</title>
+    <style>
+        :root {
+            --bg-color: #f2f2f7;
+            --card-bg: #ffffff;
+            --text-primary: #000000;
+            --text-secondary: #8e8e93;
+            --accent: #007aff;
+            --border-radius: 20px;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #1c1c1e;
+                --card-bg: #2c2c2e;
+                --text-primary: #ffffff;
+                --text-secondary: #aeaeb2;
+            }
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 680px;
+            margin: 40px auto;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 48px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 24px;
+                margin: 20px auto;
+            }
+        }
+
+        .header-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 8px;
+        }
+
+        .header-logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+        }
+
+        h1 {
+            font-size: 34px;
+            font-weight: 800;
+            letter-spacing: -0.8px;
+            margin: 0;
+            color: var(--text-primary);
+        }
+
+        .date {
+            display: block;
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+            font-weight: 500;
+        }
+
+        .intro {
+            font-size: 18px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-bottom: 40px;
+            line-height: 1.5;
+        }
+
+        h2 {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.4px;
+            margin: 40px 0 16px 0;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .number-badge {
+            background-color: var(--bg-color);
+            color: var(--text-secondary);
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        p {
+            margin: 0 0 16px 0;
+            color: var(--text-primary);
+        }
+
+        ul {
+            margin: 0 0 20px 0;
+            padding-left: 0;
+            list-style: none;
+        }
+
+        li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        li::before {
+            content: "•";
+            position: absolute;
+            left: 8px;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .contact-email {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .contact-email:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer / decorative */
+        .footer {
+            margin-top: 60px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header-row">
+            <img src="icons/icon128.png" alt="DuckIt Logo" class="header-logo">
+            <h1>Privacy Policy for DuckIt</h1>
+        </div>
+        <span class="date">Effective Date: January 29, 2026</span>
+
+        <p class="intro">DuckIt respects your privacy. This extension is designed to work entirely on your local device
+            and does not collect, store, transmit, or share any personal data.</p>
+
+        <h2><span class="number-badge">1</span> Data Collection</h2>
+        <p>DuckIt does not collect any of the following:</p>
+        <ul>
+            <li>Personally identifiable information (name, email, address, etc.)</li>
+            <li>Browsing history</li>
+            <li>Audio content</li>
+            <li>Website content</li>
+            <li>User activity such as clicks, keystrokes, or navigation</li>
+            <li>Location information</li>
+            <li>Financial or authentication information</li>
+        </ul>
+        <p>All processing is done locally within your browser.</p>
+
+        <h2><span class="number-badge">2</span> Local Storage</h2>
+        <p>DuckIt uses Chrome’s local storage only to save:</p>
+        <ul>
+            <li>The selected Music Tab</li>
+            <li>User preferences (ducking mode, volume level, enable/disable state)</li>
+            <li>Temporary session state</li>
+        </ul>
+        <p>This data never leaves your device and is never transmitted to any server.</p>
+
+        <h2><span class="number-badge">3</span> Data Sharing</h2>
+        <p>DuckIt does not:</p>
+        <ul>
+            <li>Sell user data</li>
+            <li>Transfer user data to third parties</li>
+            <li>Share data with advertisers</li>
+            <li>Use analytics or tracking services</li>
+        </ul>
+        <p>There is no external communication of any kind.</p>
+
+        <h2><span class="number-badge">4</span> Remote Code</h2>
+        <p>DuckIt does not use remote code.</p>
+        <p>All JavaScript and functionality are bundled directly inside the extension package.</p>
+
+        <h2><span class="number-badge">5</span> Permissions Usage</h2>
+        <p>DuckIt requests browser permissions only to:</p>
+        <ul>
+            <li>Detect audio activity in tabs</li>
+            <li>Control audio behavior (mute, pause, duck, restore)</li>
+            <li>Store user preferences locally</li>
+            <li>Show notifications for user awareness</li>
+        </ul>
+        <p>These permissions are strictly limited to the extension’s single purpose of intelligent audio management.</p>
+
+        <h2><span class="number-badge">6</span> Security</h2>
+        <p>Because DuckIt does not transmit or store personal data externally, there is no risk of data leakage or
+            tracking.</p>
+        <p>The extension operates completely offline after installation.</p>
+
+        <h2><span class="number-badge">7</span> Changes to this Policy</h2>
+        <p>If this privacy policy changes in the future, the updated version will be published at the same URL.</p>
+
+        <h2><span class="number-badge">8</span> Contact</h2>
+        <p>If you have any questions about privacy or data handling, you can contact:</p>
+        <p>Email: <a href="mailto:vishwaszsoni@gmail.com" class="contact-email">vishwaszsoni@gmail.com</a></p>
+
+        <div class="footer">
+            &copy; 2026 DuckIt. All rights reserved.
+        </div>
+    </div>
+</body>
+
+</html>
