@@ -16,6 +16,8 @@
     let focusModeEnabled = false;
     let focusStyle = 'normal';
     let focusParams = {};
+    const mediaElementSources = new WeakMap(); // Map<HTMLMediaElement, MediaElementSourceNode>
+    const focusEngineCache = new WeakMap(); // Map<HTMLMediaElement, FocusEngine>
     let activeFocusEngines = new WeakMap(); // Map<HTMLMediaElement, FocusEngine>
     let globalAudioContext = null;
 
@@ -61,6 +63,7 @@
             this.source = null;
             this.filter = null;
             this.convolver = null;
+            this.wetTone = null;
             this.focusGain = null;
             this.duckGain = null;
             this.masterGain = null; // Connects to destination
@@ -75,20 +78,29 @@
             // Try to create source. Note: safe to call only once per element.
             // If already created by page, this might crash or fail silent.
             // We'll wrap in try-catch.
-            try {
-                // Check if we can/should attach. 
-                // In a real pro extension, we'd shadow createMediaElementSource to capture page usage.
-                // For now, we attempt to hook.
-                this.source = this.ctx.createMediaElementSource(this.mediaElement);
-            } catch (e) {
-                console.warn('DuckIt: Could not create MediaElementSource (already connected?)', e);
-                // Fallback: we cannot process audio if we can't get source.
-                // But we can still control volume.
-                return;
+            const cachedSource = mediaElementSources.get(this.mediaElement);
+            if (cachedSource) {
+                this.source = cachedSource;
+            } else {
+                try {
+                    // Check if we can/should attach. 
+                    // In a real pro extension, we'd shadow createMediaElementSource to capture page usage.
+                    // For now, we attempt to hook.
+                    this.source = this.ctx.createMediaElementSource(this.mediaElement);
+                    mediaElementSources.set(this.mediaElement, this.source);
+                } catch (e) {
+                    console.warn('DuckIt: Could not create MediaElementSource (already connected?)', e);
+                    // Fallback: we cannot process audio if we can't get source.
+                    // But we can still control volume.
+                    return;
+                }
             }
+
+            if (!this.source) return;
 
             this.filter = this.ctx.createBiquadFilter();
             this.convolver = this.ctx.createConvolver();
+            this.wetTone = this.ctx.createBiquadFilter();
             this.focusGain = this.ctx.createGain();
             this.duckGain = this.ctx.createGain();
 
@@ -107,7 +119,9 @@
             this.filter.connect(this.dryGain);
             this.filter.connect(this.convolver);
 
-            this.convolver.connect(this.wetGain);
+            // Wet path: Convolver -> tone filter -> wet gain
+            this.convolver.connect(this.wetTone);
+            this.wetTone.connect(this.wetGain);
 
             // Merge Wet and Dry
             this.dryGain.connect(this.focusGain);
@@ -132,6 +146,7 @@
                 filterFreq: 20000,
                 dry: 1.0,
                 wet: 0.0,
+                wetLowpass: 20000,
                 gain: 1.0,
                 reverbDuration: 0,
                 reverbDecay: 0
@@ -155,11 +170,14 @@
                     p.reverbDecay = 2.0;
                     break;
                 case 'soft_room':
-                    p.dry = 0.8;
-                    p.wet = 0.2;
+                    p.filterType = 'allpass'; // keep direct signal clear
+                    p.filterFreq = 20000;
+                    p.dry = 0.85;
+                    p.wet = 0.25;
                     p.gain = 0.9;
-                    p.reverbDuration = 1.5;
-                    p.reverbDecay = 4.0;
+                    p.wetLowpass = 3000;
+                    p.reverbDuration = 1.0;
+                    p.reverbDecay = 2.2;
                     break;
                 case 'focus_background': // Deep Focus
                     p.filterType = 'lowpass';
@@ -190,6 +208,12 @@
             // Reverb (Impulse)
             if (p.wet > 0 && (!this.convolver.buffer || this.lastStyle !== focusStyle)) {
                 this.convolver.buffer = createImpulseResponse(p.reverbDuration, p.reverbDecay, false);
+            }
+
+            // Wet tone shaping (wet path only)
+            if (this.wetTone) {
+                this.wetTone.type = 'lowpass';
+                this.wetTone.frequency.setTargetAtTime(p.wetLowpass, now, 0.1);
             }
 
             // Gains
@@ -231,8 +255,17 @@
         // Only attach to relevant media
         if (el.duration < 5 && el.tagName === 'AUDIO') return; // Skip short sfx
 
-        const engine = new FocusEngine(el);
-        if (engine.source) {
+        let engine = focusEngineCache.get(el);
+        if (!engine) {
+            engine = new FocusEngine(el);
+            if (engine.source) {
+                focusEngineCache.set(el, engine);
+            }
+        } else if (!engine.source) {
+            engine.initGraph();
+        }
+
+        if (engine && engine.source) {
             activeFocusEngines.set(el, engine);
         }
     };
