@@ -33,7 +33,9 @@ export class StorageManager {
         this.cache.settings = stored[this.STORAGE_KEYS.SETTINGS] || {
             mode: 'mute',
             enabled: true,
-            duckingIntensity: 30
+            duckingIntensity: 30,
+            focusEnabled: false,
+            focusStyle: 'normal'
         };
         console.log('StorageManager initialized with cache:', this.cache);
     }

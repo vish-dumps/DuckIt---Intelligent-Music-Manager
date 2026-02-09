@@ -14,6 +14,12 @@ const volumeControl = document.getElementById('volumeControl');
 const volSlider = document.getElementById('volSlider');
 const volValue = document.getElementById('volValue');
 const toast = document.getElementById('toast');
+
+// Focus Mode Elements
+const toggleFocus = document.getElementById('toggleFocus');
+const focusControls = document.getElementById('focusControls');
+const focusStyle = document.getElementById('focusStyle');
+
 let toastTimer = null;
 
 async function init() {
@@ -21,12 +27,15 @@ async function init() {
     const settings = await storage.getSettings();
     const musicTabId = await storage.getMusicTabId();
 
+    // 1. Agent Enabled Toggle
     toggleAgent.checked = settings.enabled;
 
+    // 2. Ducking Mode
     const currentMode = settings.mode || 'mute';
     const radio = document.querySelector(`input[name="mode"][value="${currentMode}"]`);
     if (radio) radio.checked = true;
 
+    // 3. Volume Slider
     const currentVol = settings.duckingIntensity || 30;
     volSlider.value = currentVol;
     volValue.textContent = `${currentVol}%`;
@@ -37,8 +46,22 @@ async function init() {
         volumeControl.classList.add('hidden');
     }
 
+    // 4. Focus Mode State
+    if (toggleFocus && focusControls && focusStyle) {
+        toggleFocus.checked = settings.focusEnabled || false;
+        if (settings.focusEnabled) {
+            focusControls.classList.remove('hidden');
+        } else {
+            focusControls.classList.add('hidden');
+        }
+        if (settings.focusStyle) {
+            focusStyle.value = settings.focusStyle;
+        }
+    }
+
     await updateStatus(musicTabId);
 
+    // Event Listeners
     // Toggle agent
     toggleAgent.addEventListener('change', async (e) => {
         const s = await storage.getSettings();
@@ -73,6 +96,27 @@ async function init() {
         s.duckingIntensity = parseInt(e.target.value, 10);
         await storage.updateSettings(s);
     });
+
+    // Focus Mode Listeners
+    if (toggleFocus && focusControls && focusStyle) {
+        toggleFocus.addEventListener('change', async (e) => {
+            const s = await storage.getSettings();
+            s.focusEnabled = e.target.checked;
+            await storage.updateSettings(s);
+
+            if (s.focusEnabled) {
+                focusControls.classList.remove('hidden');
+            } else {
+                focusControls.classList.add('hidden');
+            }
+        });
+
+        focusStyle.addEventListener('change', async (e) => {
+            const s = await storage.getSettings();
+            s.focusStyle = e.target.value;
+            await storage.updateSettings(s);
+        });
+    }
 
     // Manual set music tab
     setMusicBtn.addEventListener('click', async () => {
@@ -112,6 +156,8 @@ async function updateStatus(musicTabIdOverride) {
             setMusicBtn.textContent = 'Update Music Tab';
             setFavicon(tab.favIconUrl);
 
+            // If focus mode enabled, maybe show something? 
+            // For now, adhere to existing logic for ducking indicator
             if (settings.mode === 'mute' && tab.mutedInfo && tab.mutedInfo.muted) {
                 duckingIndicator.classList.remove('hidden');
             } else {

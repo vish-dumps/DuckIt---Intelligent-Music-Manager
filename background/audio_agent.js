@@ -59,9 +59,30 @@ export class AudioAgent {
             const settingsKey = this.storage.STORAGE_KEYS.SETTINGS;
             if (changes[settingsKey]) {
                 const newSettings = changes[settingsKey].newValue;
-                if (this.duckedByAgent && newSettings && newSettings.enabled === false) {
-                    const musicTabId = this.storage.getMusicTabIdSync();
-                    if (musicTabId) {
+                const musicTabId = this.storage.getMusicTabIdSync();
+
+                if (musicTabId) {
+                    // Focus Mode Updates
+                    if (newSettings.focusEnabled !== undefined) {
+                        if (newSettings.focusEnabled) {
+                            this.scriptManager.send(musicTabId, {
+                                type: 'ENABLE_FOCUS',
+                                style: newSettings.focusStyle
+                            });
+                        } else {
+                            this.scriptManager.send(musicTabId, { type: 'DISABLE_FOCUS' });
+                        }
+                    }
+
+                    if (newSettings.focusEnabled && newSettings.focusStyle) {
+                        this.scriptManager.send(musicTabId, {
+                            type: 'SET_FOCUS_STYLE',
+                            style: newSettings.focusStyle
+                        });
+                    }
+
+                    // Ducking Updates
+                    if (this.duckedByAgent && newSettings && newSettings.enabled === false) {
                         this.restoreMusic(musicTabId, newSettings);
                     }
                 }
@@ -107,6 +128,15 @@ export class AudioAgent {
 
         if (options.auto && options.tab) {
             this.notifyAutoDetect(options.tab);
+        }
+
+        // Apply Focus Mode if enabled
+        const settings = await this.storage.getSettings();
+        if (settings.focusEnabled) {
+            this.scriptManager.send(tabId, {
+                type: 'ENABLE_FOCUS',
+                style: settings.focusStyle
+            });
         }
     }
 

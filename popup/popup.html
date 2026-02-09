@@ -12,60 +12,88 @@
     <div class="shell">
         <div class="container">
 
-        <!-- Header / Main Toggle -->
-        <div class="main-toggle-section">
-            <div class="logo">
-                <img src="../icons/icon128.png" alt="DuckIt" class="logo-icon">
-                <span>DuckIt</span>
+            <!-- Header / Main Toggle -->
+            <div class="main-toggle-section">
+                <div class="logo">
+                    <img src="../icons/icon128.png" alt="DuckIt" class="logo-icon">
+                    <span>DuckIt</span>
+                </div>
+                <label class="big-switch">
+                    <input type="checkbox" id="toggleAgent" checked>
+                    <span class="big-slider"></span>
+                </label>
             </div>
-            <label class="big-switch">
-                <input type="checkbox" id="toggleAgent" checked>
-                <span class="big-slider"></span>
-            </label>
-        </div>
 
-        <!-- Status -->
-        <div class="status-card" id="statusCard">
-            <img id="statusFavicon" class="status-favicon" alt="Favicon">
-            <div class="status-info">
-                <div class="status-label" id="statusTitle">No Music Tab</div>
-                <div class="status-sub" id="statusSubtitle">Auto-detecting...</div>
+            <!-- Status -->
+            <div class="status-card" id="statusCard">
+                <img id="statusFavicon" class="status-favicon" alt="Favicon">
+                <div class="status-info">
+                    <div class="status-label" id="statusTitle">No Music Tab</div>
+                    <div class="status-sub" id="statusSubtitle">Auto-detecting...</div>
+                </div>
+                <div class="status-indicator hidden" id="duckingIndicator">
+                    <span class="active-dot"></span> Active
+                </div>
             </div>
-            <div class="status-indicator hidden" id="duckingIndicator">
-                <span class="active-dot"></span> Active
+
+            <!-- Mode Selection -->
+            <!-- Focus Mode Section -->
+            <div class="section-title">Focus Mode (Pro)</div>
+            <div class="focus-section">
+                <div class="focus-row">
+                    <span class="focus-label">Enable Focus</span>
+                    <label class="switch">
+                        <input type="checkbox" id="toggleFocus">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+
+                <div id="focusControls" class="hidden">
+                    <div class="style-selector">
+                        <label>Style:</label>
+                        <select id="focusStyle" class="style-dropdown">
+                            <option value="normal">Normal</option>
+                            <option value="muffle">Muffle</option>
+                            <option value="far_away">Far Away</option>
+                            <option value="soft_room">Soft Room</option>
+                            <option value="focus_background">Deep Focus</option>
+                        </select>
+                    </div>
+                    <div class="focus-helper-text" id="focusHelperText">
+                        Applies background sound style to your music.
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <!-- Mode Selection -->
-        <div class="section-title">Ducking Mode</div>
-        <div class="mode-selector">
-            <label class="mode-option">
-                <input type="radio" name="mode" value="mute">
-                <span class="mode-box">Mute</span>
-            </label>
-            <label class="mode-option">
-                <input type="radio" name="mode" value="pause">
-                <span class="mode-box">Pause</span>
-            </label>
-            <label class="mode-option">
-                <input type="radio" name="mode" value="volume">
-                <span class="mode-box">Fade</span>
-            </label>
-        </div>
-
-        <!-- Volume Slider (Conditional) -->
-        <div class="volume-control hidden" id="volumeControl">
-            <div class="slider-header">
-                <span>Ducking Level</span>
-                <span id="volValue">30%</span>
+            <div class="section-title">Ducking Mode</div>
+            <div class="mode-selector">
+                <label class="mode-option">
+                    <input type="radio" name="mode" value="mute">
+                    <span class="mode-box">Mute</span>
+                </label>
+                <label class="mode-option">
+                    <input type="radio" name="mode" value="pause">
+                    <span class="mode-box">Pause</span>
+                </label>
+                <label class="mode-option">
+                    <input type="radio" name="mode" value="volume">
+                    <span class="mode-box">Fade</span>
+                </label>
             </div>
-            <input type="range" id="volSlider" min="0" max="100" value="30">
-        </div>
 
-        <!-- Action -->
-        <button id="setMusicBtn" class="secondary-btn">
-            Set Current Tab as Music
-        </button>
+            <!-- Volume Slider (Conditional) -->
+            <div class="volume-control hidden" id="volumeControl">
+                <div class="slider-header">
+                    <span>Ducking Level</span>
+                    <span id="volValue">30%</span>
+                </div>
+                <input type="range" id="volSlider" min="0" max="100" value="30">
+            </div>
+
+            <!-- Action -->
+            <button id="setMusicBtn" class="secondary-btn">
+                Set Current Tab as Music
+            </button>
 
         </div>
     </div>
