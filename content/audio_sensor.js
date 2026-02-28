@@ -61,7 +61,9 @@
             this.mediaElement = mediaElement;
             this.ctx = getGlobalContext();
             this.source = null;
+            this.highpass = null;
             this.filter = null;
+            this.lowpass = null;
             this.convolver = null;
             this.wetTone = null;
             this.focusGain = null;
@@ -98,26 +100,30 @@
 
             if (!this.source) return;
 
+            this.highpass = this.ctx.createBiquadFilter();
             this.filter = this.ctx.createBiquadFilter();
+            this.lowpass = this.ctx.createBiquadFilter();
             this.convolver = this.ctx.createConvolver();
             this.wetTone = this.ctx.createBiquadFilter();
             this.focusGain = this.ctx.createGain();
             this.duckGain = this.ctx.createGain();
 
             // Default graph connections
-            // Source -> Filter -> Convolver(Parallel) -> FocusGain -> DuckGain -> Destination
-            // Note: Reverb is usually parallel (Wet/Dry).
+            // Source -> HighPass -> ToneFilter -> LowPass -> (Dry/Wet split) -> FocusGain -> DuckGain -> Destination
+            // Reverb remains optional on the wet path; Voice Band uses only the dry path.
 
             this.dryGain = this.ctx.createGain();
             this.wetGain = this.ctx.createGain();
 
             // Wiring
             this.source.disconnect();
-            this.source.connect(this.filter);
+            this.source.connect(this.highpass);
+            this.highpass.connect(this.filter);
+            this.filter.connect(this.lowpass);
 
-            // Filter splits to Dry and Wet path
-            this.filter.connect(this.dryGain);
-            this.filter.connect(this.convolver);
+            // Low-pass output splits to Dry and Wet path
+            this.lowpass.connect(this.dryGain);
+            this.lowpass.connect(this.convolver);
 
             // Wet path: Convolver -> tone filter -> wet gain
             this.convolver.connect(this.wetTone);
@@ -139,11 +145,13 @@
             const now = this.ctx.currentTime;
 
             // Style definitions
-            // 'normal', 'muffle', 'far_away', 'soft_room', 'focus_background'
+            // 'normal', 'muffle', 'far_away', 'voice_band', 'focus_background'
 
             const defaults = {
                 filterType: 'allpass',
                 filterFreq: 20000,
+                highpassFreq: 20,
+                lowpassFreq: 20000,
                 dry: 1.0,
                 wet: 0.0,
                 wetLowpass: 20000,
@@ -169,15 +177,17 @@
                     p.reverbDuration = 2.0;
                     p.reverbDecay = 2.0;
                     break;
-                case 'soft_room':
-                    p.filterType = 'allpass'; // keep direct signal clear
+                case 'voice_band': // Telephone-style band limit
+                    p.filterType = 'allpass'; // keep mid body; primary shaping via band limits
                     p.filterFreq = 20000;
-                    p.dry = 0.85;
-                    p.wet = 0.25;
-                    p.gain = 0.9;
-                    p.wetLowpass = 3000;
-                    p.reverbDuration = 1.0;
-                    p.reverbDecay = 2.2;
+                    p.highpassFreq = 320;
+                    p.lowpassFreq = 3400;
+                    p.dry = 1.0;
+                    p.wet = 0.0; // no reverb per design
+                    p.gain = 0.85;
+                    p.wetLowpass = 3400;
+                    p.reverbDuration = 0;
+                    p.reverbDecay = 0;
                     break;
                 case 'focus_background': // Deep Focus
                     p.filterType = 'lowpass';
@@ -195,7 +205,10 @@
             }
 
             // Apply paremeters
-            // Filter
+            // Filters
+            this.highpass.type = 'highpass';
+            this.highpass.frequency.setTargetAtTime(p.highpassFreq, now, 0.1);
+
             if (p.filterType === 'allpass') {
                 // effectively bypass filter
                 this.filter.type = 'lowpass';
@@ -204,6 +217,9 @@
                 this.filter.type = p.filterType;
                 this.filter.frequency.setTargetAtTime(p.filterFreq, now, 0.1);
             }
+
+            this.lowpass.type = 'lowpass';
+            this.lowpass.frequency.setTargetAtTime(p.lowpassFreq, now, 0.1);
 
             // Reverb (Impulse)
             if (p.wet > 0 && (!this.convolver.buffer || this.lastStyle !== focusStyle)) {

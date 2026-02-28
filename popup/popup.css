@@ -45,6 +45,12 @@ body {
     margin-bottom: 20px;
 }
 
+.logo-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
 .logo {
     font-weight: 700;
     font-size: 18px;
@@ -52,6 +58,34 @@ body {
     background: linear-gradient(90deg, #fff, #aaa);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+}
+
+.help-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: #06251c;
+    font-weight: 800;
+    font-size: 14px;
+    text-decoration: none;
+    border: 1px solid rgba(0, 224, 184, 0.55);
+    box-shadow: 0 8px 20px var(--primary-glow);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+
+.help-btn:hover {
+    transform: translateY(-1px) scale(1.03);
+    box-shadow: 0 10px 24px var(--primary-glow);
+    filter: brightness(1.05);
+}
+
+.help-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 6px 16px var(--primary-glow);
 }
 
 .status-badge {

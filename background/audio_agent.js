@@ -7,6 +7,7 @@ export class AudioAgent {
         this.duckedByAgent = false;
         this.lastDuckMode = null;
         this.tabAudioState = new Map();
+        this.listenersBound = false;
         this.NOTIFICATION_ICON = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAALElEQVR42mNgGAU0AxGMiYGB4T8TDLQZCxVgQWg0Go02GoxGY9FoNAyGQxEAAG4kBtuWNb49AAAAAElFTkSuQmCC';
 
         this.KNOWN_MUSIC_SITES = [
@@ -22,10 +23,17 @@ export class AudioAgent {
     }
 
     async init() {
+        this.bindEventListeners();
         await this.storage.whenReady();
         await this.registerSensorScript();
         await this.injectSensorIntoExistingTabs();
+        await this.clearStaleMusicTab();
         await this.detectExistingMusicTabs();
+    }
+
+    bindEventListeners() {
+        if (this.listenersBound) return;
+        this.listenersBound = true;
 
         chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
             if (changeInfo.status === 'loading') {
@@ -33,6 +41,7 @@ export class AudioAgent {
             }
             if (changeInfo.status === 'complete') {
                 this.scriptManager.ensureSensor(tabId);
+                this.checkAutoDetect(tabId, tab);
             }
             if (changeInfo.url) {
                 this.checkAutoDetect(tabId, tab);
@@ -223,6 +232,18 @@ export class AudioAgent {
             }
         } catch (e) {
             console.debug('DuckIt auto-detect scan failed', e?.message || e);
+        }
+    }
+
+    async clearStaleMusicTab() {
+        const musicTabId = this.storage.getMusicTabIdSync();
+        if (!musicTabId) return;
+        try {
+            await chrome.tabs.get(musicTabId);
+        } catch (_) {
+            await this.storage.setMusicTabId(null);
+            this.duckedByAgent = false;
+            this.lastDuckMode = null;
         }
     }
 

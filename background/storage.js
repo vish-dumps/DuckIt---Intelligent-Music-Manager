@@ -30,13 +30,22 @@ export class StorageManager {
         ]);
 
         this.cache.musicTabId = stored[this.STORAGE_KEYS.MUSIC_TAB_ID] || null;
-        this.cache.settings = stored[this.STORAGE_KEYS.SETTINGS] || {
+        const fallbackSettings = {
             mode: 'mute',
             enabled: true,
             duckingIntensity: 30,
             focusEnabled: false,
             focusStyle: 'normal'
         };
+
+        const incomingSettings = stored[this.STORAGE_KEYS.SETTINGS] || fallbackSettings;
+
+        // Migration: replace legacy 'soft_room' with new 'voice_band'
+        if (incomingSettings.focusStyle === 'soft_room') {
+            incomingSettings.focusStyle = 'voice_band';
+        }
+
+        this.cache.settings = { ...fallbackSettings, ...incomingSettings };
         console.log('StorageManager initialized with cache:', this.cache);
     }
 
